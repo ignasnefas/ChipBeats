@@ -6,6 +6,8 @@ A chiptune-inspired drum sequencer with both **web** and **desktop (Electron)** 
 
 This project is a modular drum machine with track editing, step grid sequencing, synth/instrument controls, and performance optimizations (node pooling, low-power mode, lazy UI loading). It supports keyboard shortcuts, project export/import, theme switching, mute/solo, and auto-save.
 
+![ChipBeats Screenshot](assets/screenshot.png)
+
 **Available as:**
 - 🌐 **Web App** - Run in any modern browser
 - 🖥️ **Desktop App (Windows)** - Standalone Electron application with installer and portable versions
