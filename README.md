@@ -1,4 +1,4 @@
-# ChipBeat Drum Machine App (v2)
+# ChipBeats
 
 A chiptune-inspired drum sequencer with both **web** and **desktop (Electron)** versions built with React + Vite + Tailwind + Web Audio API.
 
