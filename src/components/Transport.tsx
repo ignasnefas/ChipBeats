@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { useSequencerStore } from '../store/sequencerStore';
-import { makePresetPatterns } from '../audio/presets';
 import { downloadProject, loadProjectFile } from '../utils/projectExport';
 
 const BPM_MIN = 1;
@@ -12,8 +11,6 @@ export default memo(function Transport() {
   const isPlaying = useSequencerStore(s => s.isPlaying);
   const masterVolume = useSequencerStore(s => s.masterVolume);
   const masterCompressor = useSequencerStore(s => s.masterCompressor);
-  const themeMode = useSequencerStore(s => s.themeMode);
-  const currentSoundPack = useSequencerStore(s => s.currentSoundPack);
   const previewOnStepToggle = useSequencerStore(s => s.previewOnStepToggle);
   const visualizerVisible = useSequencerStore(s => s.visualizerVisible);
   const patterns = useSequencerStore(s => s.patterns);
@@ -40,13 +37,10 @@ export default memo(function Transport() {
   const renamePattern = useSequencerStore(s => s.renamePattern);
   const setStepCount = useSequencerStore(s => s.setStepCount);
   const setSwing = useSequencerStore(s => s.setSwing);
-  const setThemeMode = useSequencerStore(s => s.setThemeMode);
-  const setSoundPack = useSequencerStore(s => s.setSoundPack);
   const undo = useSequencerStore(s => s.undo);
   const redo = useSequencerStore(s => s.redo);
   const resetAll = useSequencerStore(s => s.resetAll);
   const saveToStorage = useSequencerStore(s => s.saveToStorage);
-  const applyPatternPreset = useSequencerStore(s => s.applyPatternPreset);
   const setShowEditor = useSequencerStore(s => s.setShowEditor);
   const setEditingInstrument = useSequencerStore(s => s.setEditingInstrument);
   const setActiveEditorTab = useSequencerStore(s => s.setActiveEditorTab);
@@ -64,7 +58,6 @@ export default memo(function Transport() {
   bpmRef.current = bpm;
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameVal, setRenameVal] = useState('');
-  const [patternPreset, setPatternPreset] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   const bpmInputRef = useRef<HTMLInputElement>(null);
 
@@ -250,19 +243,6 @@ export default memo(function Transport() {
             />
             <span className="text-[10px] text-gray-300">Show visualizer</span>
           </label>
-          
-          {/* Theme selector */}
-          <select
-            value={themeMode}
-            onChange={(e) => setThemeMode(e.target.value as any)}
-            className="px-2 py-1 rounded-lg text-[9px] font-bold bg-gray-700 text-gray-300 hover:text-white transition-all border border-gray-600 outline-none cursor-pointer"
-            title="Color Theme"
-          >
-            <option value="retro">🎮 Retro</option>
-            <option value="dark">🌙 Dark</option>
-            <option value="high-contrast">⚡ HC</option>
-          </select>  
-
           <button
             onClick={() => downloadProject(getProjectExportData())}
             className="px-3 py-1 rounded-lg text-[9px] font-bold bg-gray-700 text-blue-400 hover:bg-gray-600 transition-all"
@@ -282,38 +262,6 @@ export default memo(function Transport() {
             className="px-3 py-1 rounded-lg text-[9px] font-bold bg-gray-700 text-blue-400 hover:bg-gray-600 transition-all"
             title="Load project from JSON file"
           >⬆ Import</button>
-          
-          <div className="w-full sm:w-auto flex flex-col gap-1 sm:flex-row sm:items-center">
-            <select
-              value={currentSoundPack}
-              onChange={(e) => setSoundPack(e.target.value as any)}
-              className="px-2 py-1 rounded-lg text-[9px] font-bold bg-gray-700 text-gray-300 hover:text-white transition-all border border-gray-600 outline-none cursor-pointer"
-              title="Sound Pack (affects all instruments)"
-            >
-              <option value="default">🎚 Default</option>
-              <option value="ambient">☁️ Ambient</option>
-              <option value="chiptune">🎮 Chiptune</option>
-              <option value="synthwave">🌅 Synthwave</option>
-              <option value="lo-fi">📻 Lo-Fi</option>
-              <option value="hiphop">🎧 Hip-Hop</option>
-            </select>
-            <select
-              value={patternPreset}
-              onChange={(e) => {
-                const selectedId = e.target.value;
-                setPatternPreset(''); // reset to placeholder after applying
-                if (!selectedId) return;
-                applyPatternPreset(selectedId);
-              }}
-              className="px-2 py-1 rounded-lg text-[9px] font-bold bg-gray-700 text-gray-300 hover:text-white transition-all border border-gray-600 outline-none cursor-pointer"
-              title="Pattern Preset (replace current pattern)"
-            >
-              <option value="">🎵 Pattern Presets</option>
-              {makePresetPatterns(instruments).map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
           <button
             onClick={() => {
               if (window.confirm('Reset everything? This cannot be undone.')) resetAll();

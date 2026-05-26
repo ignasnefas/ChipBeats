@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState, Suspense, lazy } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import Transport from './components/Transport';
 import StepGrid from './components/StepGrid';
 import Keyboard from './components/Keyboard';
 import { useSequencerStore } from './store/sequencerStore';
-import { getTheme } from './theme';
 
 // Lazy load heavy components
 const Visualizer = lazy(() => import('./components/Visualizer'));
@@ -22,19 +21,18 @@ export default function App() {
   const setActiveEditorTab = useSequencerStore(s => s.setActiveEditorTab);
   const setEditingInstrument = useSequencerStore(s => s.setEditingInstrument);
   const visualizerVisible = useSequencerStore(s => s.visualizerVisible);
-  const themeMode = useSequencerStore(s => s.themeMode);
 
-  const theme = useMemo(() => getTheme(themeMode), [themeMode]);
-
-  // Apply CSS vars for theme
-  useEffect(() => {
-    document.documentElement.style.setProperty('--cb-bg', theme.colors.bg);
-    document.documentElement.style.setProperty('--cb-bg-secondary', theme.colors.bgSecondary);
-    document.documentElement.style.setProperty('--cb-border', theme.colors.border);
-    document.documentElement.style.setProperty('--cb-text', theme.colors.text);
-    document.documentElement.style.setProperty('--cb-text-secondary', theme.colors.textSecondary);
-    document.documentElement.style.setProperty('--cb-accent', theme.colors.accent);
-  }, [theme]);
+  const theme = {
+    colors: {
+      bg: '#0a0a0a',
+      bgSecondary: '#111827',
+      border: '#334155',
+      text: '#f8fafc',
+      textSecondary: '#94a3b8',
+      accent: '#22c55e',
+    },
+    scanlines: false,
+  };
 
   // Auto-open editor when instrument is selected
   useEffect(() => {
